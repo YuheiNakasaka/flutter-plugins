@@ -317,7 +317,7 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
       return;
     }
     // The player may be initialized but still needs to determine the duration.
-    if ([self duration] == 0 && ![self isDurationIndefinite]) {
+    if ([self duration] == 0) {
       return;
     }
 
@@ -346,6 +346,8 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
 }
 
 - (int64_t)duration {
+  //when CMTIME_IS_INDEFINITE return value that matches Exoplayer's UNKNOWN_TIME
+  if ([self isDurationIndefinite]) return -1;
   return FLTCMTimeToMillis([[_player currentItem] duration]);
 }
 
