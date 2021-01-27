@@ -11,13 +11,6 @@
 #error Code Requires ARC.
 #endif
 
-const int64_t TIME_UNSET = -9223372036854775807;
-
-int64_t FLTCMTimeToMillis(CMTime time) {
-  if (time.timescale == 0) return 0;
-  return time.value * 1000 / time.timescale;
-}
-
 @interface FLTFrameUpdater : NSObject
 @property(nonatomic) int64_t textureId;
 @property(nonatomic, weak, readonly) NSObject<FlutterTextureRegistry>* registry;
@@ -105,6 +98,15 @@ static void* playbackBufferFullContext = &playbackBufferFullContext;
       _eventSink(@{@"event" : @"completed"});
     }
   }
+}
+
+const int64_t TIME_UNSET = -9223372036854775807;
+
+static inline int64_t FLTCMTimeToMillis(CMTime time) {
+  //when CMTIME_IS_INDEFINITE return value that matches Exoplayer2's TIME_UNSET
+  if (CMTIME_IS_INDEFINITE(time)) return TIME_UNSET;
+  if (time.timescale == 0) return 0;
+  return time.value * 1000 / time.timescale;
 }
 
 static inline CGFloat radiansToDegrees(CGFloat radians) {
@@ -343,13 +345,7 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
   return FLTCMTimeToMillis([_player currentTime]);
 }
 
-- (bool)isDurationIndefinite {
-  return CMTIME_IS_INDEFINITE([[_player currentItem] duration]);
-}
-
 - (int64_t)duration {
-  //when CMTIME_IS_INDEFINITE return value that matches Exoplayer2's TIME_UNSET
-  if ([self isDurationIndefinite]) return TIME_UNSET;
   return FLTCMTimeToMillis([[_player currentItem] duration]);
 }
 

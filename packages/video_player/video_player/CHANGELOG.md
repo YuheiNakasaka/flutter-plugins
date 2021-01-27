@@ -1,6 +1,6 @@
 ## 1.0.1+1
 
-* Added isDurationIndefinite to support indefinite streams
+* Refactor `FLTCMTimeToMillis` to support indefinite streams
 
 ## 1.0.1
 
