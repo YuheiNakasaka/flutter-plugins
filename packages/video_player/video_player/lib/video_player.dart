@@ -257,8 +257,11 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
   /// Attempts to open the given [dataSource] and load metadata about the video.
   Future<void> initialize() async {
     _lifeCycleObserver = _VideoAppLifeCycleObserver(this);
-    if (videoPlayerOptions?.observeAppLifecycle)
-      _lifeCycleObserver.initialize();
+    if (videoPlayerOptions != null) {
+      if (videoPlayerOptions!.observeAppLifecycle) {
+        _lifeCycleObserver.initialize();
+      }
+    }
     _creatingCompleter = Completer<void>();
 
     late DataSource dataSourceDescription;
